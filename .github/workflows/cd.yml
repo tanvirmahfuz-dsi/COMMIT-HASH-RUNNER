@@ -17,4 +17,5 @@ jobs:
         run: |
           set -x
           echo "Hello from the VM!"
+          touch main.yml
           date
