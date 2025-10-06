@@ -1,4 +1,4 @@
-name: CD Print Hello
+name: CD - Install Apps on Runner VM
 
 on:
   push:
@@ -7,15 +7,20 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Print hello in VM console
+      - name: Install apps on runner VM
         run: |
-          set -x
-          echo "Hello from the VM!"
-          sudo apt update
-          date
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+          ssh -o StrictHostKeyChecking=no root@192.168.123.10 << 'EOF'
+            apt update -y
+            apt install -y ansible
+            echo "Installation complete"
+          EOF
