@@ -10,17 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install apps on runner VM
+      - name: Run Ansible Playbook
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-          ssh -o StrictHostKeyChecking=no root@192.168.123.10 << 'EOF'
-            apt update -y
-            apt install -y ansible
-            echo "Installation complete"
-          EOF
+          ansible-playbook -i ./ansible/inventory.ini ./ansible/print_hello.yml
