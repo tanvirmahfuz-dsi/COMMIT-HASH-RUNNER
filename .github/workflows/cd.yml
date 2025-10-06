@@ -1,18 +1,22 @@
-name: CD - Install Apps on Runner VM
-
-on:
-  push:
-    branches:
-      - main
-
 jobs:
   deploy:
-    runs-on: self-hosted
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install Ansible
+        run: sudo apt update && sudo apt install -y ansible sshpass
+
       - name: Run Ansible Playbook
+        env:
+          ANSIBLE_PASSWORD_TANVIR1: ${{ secrets.SSH_PASS_TANVIR1 }}
+          ANSIBLE_PASSWORD_TANVIR2: ${{ secrets.SSH_PASS_TANVIR2 }}
+          ANSIBLE_PASSWORD_TANVIR3: ${{ secrets.SSH_PASS_TANVIR3 }}
+          ANSIBLE_PASSWORD_NGINX: ${{ secrets.SSH_PASS_NGINX }}
         run: |
-          cd ./ansible && ansible-playbook playbooks/site.yml
+          ansible-playbook -i Hosts.yml playbooks/site.yml \
+          --extra-vars "ansible_password_tanvir1=$ANSIBLE_PASSWORD_TANVIR1 \
+                        ansible_password_tanvir2=$ANSIBLE_PASSWORD_TANVIR2 \
+                        ansible_password_tanvir3=$ANSIBLE_PASSWORD_TANVIR3 \
+                        ansible_password_nginx=$ANSIBLE_PASSWORD_NGINX"
