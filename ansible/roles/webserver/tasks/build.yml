@@ -20,8 +20,7 @@
 - name: SHOW DOCKER IMAGE BUILD LOG
   debug:
     var: build_result.stdout_lines
-
-- name: Save new app contents hash
-  copy:
-    content: "{{ app_hash.stdout }}"
-    dest: /home/{{ ansible_user }}/server/.app_hash
+# - name: Save new app contents hash
+#   copy:
+#     content: "{{ app_hash.stdout }}"
+#     dest: /home/{{ ansible_user }}/server/.app_hash
