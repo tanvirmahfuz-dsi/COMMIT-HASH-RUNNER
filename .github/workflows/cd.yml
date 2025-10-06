@@ -22,7 +22,7 @@ jobs:
           ANSIBLE_PASSWORD_TANVIR3: ${{ secrets.SSH_PASS_TANVIR3 }}
           ANSIBLE_PASSWORD_NGINX: ${{ secrets.SSH_PASS_NGINX }}
         run: |
-          ansible-playbook -i Hosts.yml playbooks/site.yml \
+          cd ansible/ && ansible-playbook -i Hosts.yml playbooks/site.yml \
           --extra-vars "ansible_password_tanvir1=$ANSIBLE_PASSWORD_TANVIR1 \
                         ansible_password_tanvir2=$ANSIBLE_PASSWORD_TANVIR2 \
                         ansible_password_tanvir3=$ANSIBLE_PASSWORD_TANVIR3 \
