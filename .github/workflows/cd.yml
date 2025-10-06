@@ -1,43 +1,25 @@
-name: CD - setting starting servers in vms
-on:
-  workflow_run:
-    workflows: ["CI - Build & Push Docker Image"]
-    types:
-      - completed
+name: CD Testing Access
 
+on:
+  push:
+    branches:
+      - main
 jobs:
   deploy:
     runs-on: self-hosted
-    strategy:
-      matrix:
-        vm: [VM1, VM2, VM3]
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Deploy to VM1
-        if: matrix.vm == 'VM1'
-        uses: ./actions/deploy/
-        with:
-          vm-ip: ${{ secrets.VM1_IP }}
-          vm-user: ${{ secrets.VM1_USER }}
-          dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Install Ansible if missing
+        run: |
+          if ! command -v ansible &> /dev/null
+          then
+            sudo apt update && sudo apt install -y ansible
+          fi
 
-      - name: Deploy to VM2
-        if: matrix.vm == 'VM2'
-        uses: ./actions/deploy/
-        with:
-          vm-ip: ${{ secrets.VM2_IP }}
-          vm-user: ${{ secrets.VM2_USER }}
-          dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Deploy to VM3
-        if: matrix.vm == 'VM3'
-        uses: ./actions/deploy/
-        with:
-          vm-ip: ${{ secrets.VM3_IP }}
-          vm-user: ${{ secrets.VM3_USER }}
-          dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Run Ansible playbook
+        working-directory: ./ansible
+        run: |
+          ansible-playbook -i inventory.ini print_hello.yml
