@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+
 jobs:
   deploy:
     runs-on: self-hosted
@@ -14,12 +15,25 @@ jobs:
 
       - name: Install Ansible if missing
         run: |
+          set -x
+          echo "Checking if Ansible is installed..."
           if ! command -v ansible &> /dev/null
           then
-            sudo apt update && sudo apt install -y ansible
+            echo "Ansible not found — installing..."
+            date
+            sudo apt update -y
+            sudo apt install -y ansible
+            date
+          else
+            echo "Ansible is already installed."
+            ansible --version
           fi
 
       - name: Run Ansible playbook
         working-directory: ./ansible
         run: |
-          ansible-playbook -i inventory.ini print_hello.yml
+          set -x
+          echo "Running Ansible playbook..."
+          date
+          ansible-playbook -i inventory.ini print_hello.yml -vvv
+          date
