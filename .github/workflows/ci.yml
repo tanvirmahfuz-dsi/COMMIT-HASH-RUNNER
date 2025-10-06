@@ -25,14 +25,14 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v2 # pulling the dockelogin action
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
       # once the actions are perfomed I have a linux environment with docker installed and logged in and my code base in the machine
 
       - name: Build the Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/simple-github-commit-hash-printer:latest .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/simple-github-commit-hash-printer:latest .
 
       - name: Push the Docker Image
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/simple-github-commit-hash-printer:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/simple-github-commit-hash-printer:latest
