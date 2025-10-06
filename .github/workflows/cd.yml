@@ -15,4 +15,4 @@ jobs:
 
       - name: Run Ansible Playbook
         run: |
-          cd ./ansible && ansible -i Hosts.yml web -m ping
+          cd ./ansible && ansible -i inventory/Hosts.yml web -m ping
