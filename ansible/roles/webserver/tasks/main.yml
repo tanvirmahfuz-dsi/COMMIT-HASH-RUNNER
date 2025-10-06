@@ -1,6 +1,37 @@
-- import_tasks: copy.yml
-# - import_tasks: compare.yml
-- import_tasks: remove.yml
-- import_tasks: build.yml
-- import_tasks: run.yml
-- import_tasks: logs.yml
+# - import_tasks: copy.yml
+# # - import_tasks: compare.yml
+# - import_tasks: remove.yml
+# - import_tasks: build.yml
+# - import_tasks: run.yml
+# - import_tasks: logs.yml
+- name: Get container names from image
+  command: docker ps -a --filter "ancestor=tanvirmahfuz22/simple-github-commit-hash-printer" --format "{{'{{.Names}}'}}"
+  register: container_names
+
+- name: Show containers found
+  debug:
+    var: container_names.stdout_lines
+
+- name: Stop containers
+  command: docker stop {{ item }}
+  loop: "{{ container_names.stdout_lines }}"
+  when: container_names.stdout_lines | length > 0
+
+- name: Remove containers
+  command: docker rm -f {{ item }}
+  loop: "{{ container_names.stdout_lines }}"
+  when: container_names.stdout_lines | length > 0
+
+- name: Pull Docker image from Docker Hub
+  docker_image:
+    name: tanvirmahfuz22/simple-github-commit-hash-printer
+    source: pull
+
+- name: Run Docker container
+  docker_container:
+    name: commit-hash-printer
+    image: tanvirmahfuz22/simple-github-commit-hash-printer:latest
+    state: started
+    restart_policy: always
+    ports:
+      - "3000:3000"
