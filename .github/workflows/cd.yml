@@ -1,4 +1,4 @@
-name: CD Testing Access
+name: CD Print Hello
 
 on:
   push:
@@ -13,27 +13,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Ansible if missing
+      - name: Print hello in VM console
         run: |
           set -x
-          echo "Checking if Ansible is installed..."
-          if ! command -v ansible &> /dev/null
-          then
-            echo "Ansible not found — installing..."
-            date
-            sudo apt update -y
-            sudo apt install -y ansible
-            date
-          else
-            echo "Ansible is already installed."
-            ansible --version
-          fi
-
-      - name: Run Ansible playbook
-        working-directory: ./ansible
-        run: |
-          set -x
-          echo "Running Ansible playbook..."
-          date
-          ansible-playbook -i inventory.ini print_hello.yml -vvv
+          echo "Hello from the VM!"
           date
