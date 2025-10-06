@@ -15,4 +15,4 @@ jobs:
 
       - name: Run Ansible Playbook
         run: |
-          ansible-playbook -i ./ansible/inventory.ini ./ansible/print_hello.yml
+          cd ./ansible && ansible-playbook playbooks/site.yml
