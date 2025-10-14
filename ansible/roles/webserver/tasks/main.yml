@@ -26,7 +26,8 @@
   docker_image:
     name: tanvirmahfuz22/simple-github-commit-hash-printer
     source: pull
-
+    force_source: true
+0
 - name: Run Docker container
   docker_container:
     name: commit-hash-printer
