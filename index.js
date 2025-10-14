@@ -23,12 +23,7 @@ function getLocalIP() {
 
 app.get("/", async (req, res) => {
   try {
-    // const result = await fetch(GITHUB_API_URL, {
-    //     headers: {
-    //     "Authorization": `token ${GITHUB_TOKEN}`,
-    //     "User-Agent": "Node.js"
-    //   }
-    // });
+    const result = await fetch(GITHUB_API_URL);
     const data = await result.json();
     if(!data.sha){
       return res.status(404).json({msg:data.message})
