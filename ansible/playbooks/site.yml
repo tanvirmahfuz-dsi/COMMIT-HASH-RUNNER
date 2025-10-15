@@ -17,10 +17,6 @@
   vars:
     nginx_container_name: nginx-reverse-proxy
     nginx_image: nginx:latest
-    backend_servers:
-      - 192.168.123.11:3000
-      - 192.168.123.12:3000
-      - 192.168.123.13:3000
   gather_facts: yes
   roles:
     - nginx

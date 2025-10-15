@@ -9,7 +9,10 @@
     src: nginx.conf.j2
     dest: /tmp/nginx.conf
   vars:
-    backend_servers: "{{ backend_servers }}"
+    backend_servers:
+      - 192.168.123.11:3000
+      - 192.168.123.12:3000
+      - 192.168.123.13:3000
 
 - name: Pull Nginx Docker image
   community.docker.docker_image:
