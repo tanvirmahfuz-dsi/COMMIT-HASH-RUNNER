@@ -3,7 +3,7 @@
   become: yes # yes means you will run commands with sudo.
   roles: # the list in here is a list of commands. each file in this directory|path contains some statements that are going to be used when running the executor.
     - common
-# in short, hosts: all -> means where. become: yes -> means run commands with sudo. and roles: - list -> run these files
+    # in short, hosts: all -> means where. become: yes -> means run commands with sudo. and roles: - list -> run these files
     - monitoring
 # here we just change target and executables to execute different commands(role) to different targets
 - hosts: web
@@ -14,7 +14,13 @@
 - name: Install and configure nginx
   hosts: nginx
   become: yes
+  vars:
+    nginx_container_name: nginx-reverse-proxy
+    nginx_image: nginx:latest
+    backend_servers:
+      - 192.168.123.11:3000
+      - 192.168.123.12:3000
+      - 192.168.123.13:3000
   gather_facts: yes
   roles:
     - nginx
-
